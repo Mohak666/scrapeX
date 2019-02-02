@@ -1,18 +1,15 @@
 import requests
 import bs4
 
-file = open('all-jobs.txt','w')
-file.write('')
-file.close()
+open('all-jobs.txt','w').close()
 file = open('all-jobs.txt','a+')
 
-
 # scraping for Aporeto jobs
+print("scraping jobs at aporeto")
 file1 = open('aporeto-jobs.txt','w')
 file1.write('')
 file1.close()
 file1=open('aporeto-jobs.txt','a+')
-print("Scraping aporeto jobs")
 url  = 'https://www.aporeto.com/job-listings/'
 html = requests.get(url)
 
@@ -27,24 +24,19 @@ for job in jobs:
     location = job.find('h4').get_text()
     description = job.find('p').getText()
 
-    file.write("Title:"+ title +"\n")
-    file.write("Location:"+ location +"\n")
-    file.write("Description:"+ description +"\n")
-    file.write("\n\n")
-    file1.write("Title:"+ title +"\n")
-    file1.write("Location:"+ location +"\n")
-    file1.write("Description:"+ description +"\n")
-    file1.write("\n\n")
-print("Aporeto jobs scraped successfully")
+    file.write("Title:"+ title +"\n"+"Location:"+ location +"\n"+"Description:"+ description +"\n\n")
+    file1.write("Title:"+ title +"\n"+"Location:"+ location +"\n"+"Description:"+ description +"\n\n")
 file1.close()
+print("Aporeto jobs scraped successfully")
+
 
 
 # scraping for descartes jobs
+print('\nscraping jobs at descartes')
 file1 = open('descartes-jobs.txt','w')
 file1.write('')
 file1.close()
 file1=open('descartes-jobs.txt','a+')
-print('\nScraping jobs at descartes')
 file.write("\n\n\t\t\t\t\t DESCARTES JOBS\n\n")
 file1.write("\n\n\t\t\t\t\t DESCARTES JOBS\n\n")
 url  = 'https://jobs.lever.co/descarteslabs.com/'
@@ -93,16 +85,17 @@ for job in jobs:
 
     file.write("\n\n\n\n")
     file1.write("\n\n\n\n")
-print("Descartes jobs scraped successfully")
 file1.close()
+print("Descartes jobs scraped successfully")
+
 
 
 # scraping for mesosphere jobs
+print("\nscraping jobs at mesosphere")
 file1 = open('mesosphere-jobs.txt','w')
 file1.write('')
 file1.close()
 file1=open('mesosphere-jobs.txt','a+')
-print("\nScraping for mesosphere jobs")
 file.write("\n\n\t\t\t\t\t MESOSPHERE JOBS\n\n")
 file1.write("\n\n\t\t\t\t\t MESOSPHERE JOBS\n\n")
 url  = 'https://mesosphere.com/careers/'
@@ -118,20 +111,15 @@ for job in jobs:
     title = title.split('-')
     # print(link)
     if(len(title)>1):
-        file.write("Title: "+title[0]+"\n")
-        file.write("Speciality/Area: "+title[1]+"\n")
-        file1.write("Title: "+title[0]+"\n")
-        file1.write("Speciality/Area: "+title[1]+"\n")
+        file.write("Title: "+title[0]+"\n"+"Speciality/Area: "+title[1]+"\n")
+        file1.write("Title: "+title[0]+"\n"+"Speciality/Area: "+title[1]+"\n")
     else:
         file.write("Title: "+title[0]+"\n")
         file1.write("Title: "+title[0]+"\n")
-    file.write("Location: "+location+"\n")
-    file.write("Description: \n")
-    file1.write("Location: "+location+"\n")
-    file1.write("Description: \n")
+    file.write("Location: "+location+"\n"+"Description: \n")
+    file.write("Location: "+location+"\n"+"Description: \n")
 
-    descriptionURL = link;
-    descriptionHTML = requests.get(descriptionURL)
+    descriptionHTML = requests.get(link)
     bs1 = bs4.BeautifulSoup(descriptionHTML.text,"html.parser")
     container = bs1.find('div',{'id':'content'})
     entities = container.find_all('span',{'style':"font-weight: 400;"})
@@ -141,19 +129,20 @@ for job in jobs:
         # print('done')
     file.write("\n\n")
     file1.write("\n\n")
-print("mesosphere jobs scraped succesfully")
 file1.close()
+print("mesosphere jobs scraped succesfully")
+
 
 
 # scraping for rocketlabusa jobs
+print("\nscraping jobs at rocketlabusa")
 file1 = open('rocketlabusa-jobs.txt','w')
 file1.write('')
 file1.close()
 file1=open('rocketlabusa-jobs.txt','a+')
-print("\nScraping for rocketlabusa jobs")
 url  = 'https://www.rocketlabusa.com/careers/positions/'
 html = requests.get(url)
-bs = bs4.BeautifulSoup(html.text,"lxml")
+bs = bs4.BeautifulSoup(html.text,"html.parser")
 
 jobs = bs.find_all('a',{'class':'job'})
 # print(jobs)
@@ -179,39 +168,55 @@ for job in jobs:
     text = bs1.find('div',{'class':'job__info-subtitle'}).get_text()
     file.write("\t\t"+text+"\n\n\n")
     file1.write("\t\t"+text+"\n\n\n")
-print("rocketlabusa jobs scraped succesfully")
+
 file1.close()
+print("rocketlabusa jobs scraped succesfully")
+
 
 
 # scraping for checkr jobs
-file1 = open('checkr-jobs.txt','w')
-file1.write('')
-file1.close()
-file1=open('checkr-jobs.txt','a+')
-print("\nscraping for checkr jobs")
+print("\nscraping jobs at checkr")
 url  = 'https://checkr.com/careers/'
 html = requests.get(url)
 bs = bs4.BeautifulSoup(html.text,"html.parser")
 
 jobs = bs.find_all('a',{'class':'career question kitchensink'})
-file.write("\n\n\t\t\t\t\t CHECKR JOBS\n\n")
+open("checkr-jobs.txt",'w').close()
+file1 = open('checkr-jobs.txt','a+')
 file1.write("\n\n\t\t\t\t\t CHECKR JOBS\n\n")
+file.write("\n\n\t\t\t\t\t CHECKR JOBS\n\n")
 for job in jobs:
-    title = job.find('span').get_text()
-    file.write("Title: "+title+"\n")
+    link = job['href']
+    title = job.find('span').get_text().strip('\n')
     file1.write("Title: "+title+"\n")
-file.write("\n\n")
+    file.write("Title: "+title+"\n")
+
+    descriptionHTML = requests.get(link)
+    bs1 = bs4.BeautifulSoup(descriptionHTML.text,"html.parser")
+    content = bs1.find('div',{'id':'content'}).get_text()
+    location = bs1.find('div',{'class':'location'}).get_text()
+    file1.write("Location: "+location+"\n")
+    file1.write("Description: \n")
+    file1.write(content)
+    file1.write("\n---------------------\n")
+    file.write("Location: "+location+"\n")
+    file.write("Description: \n")
+    file.write(content)
+    file.write("\n---------------------\n")
 file1.write("\n\n")
+file.write("\n\n")
+file1.close()
 print("checkr jobs scraped succesfully")
 
 
 
 # scraping for interana jobs
+print("\nscraping jobs at interana")
 file1 = open('interana-jobs.txt','w')
 file1.write('')
 file1.close()
 file1=open('interana-jobs.txt','a+')
-print("\nscraping for interana jobs")
+
 url  = 'https://boards.greenhouse.io/interana'
 html = requests.get(url)
 bs = bs4.BeautifulSoup(html.text,"html.parser")
@@ -225,12 +230,8 @@ for job in jobs:
     link = "https://boards.greenhouse.io"+link
     title = job.find('a').get_text()
     location = job.find('span').get_text()
-    file.write("Title: "+title+"\n")
-    file.write("Location: "+location+"\n\n")
-    file.write("Description: \n")
-    file1.write("Title: "+title+"\n")
-    file1.write("Location: "+location+"\n\n")
-    file1.write("Description: \n")
+    file.write("Title: "+title+"\n"+"Location: "+location+"\n\n"+"Description: \n")
+    file1.write("Title: "+title+"\n"+"Location: "+location+"\n\n"+"Description: \n")
 
     descriptionHTML = requests.get(link)
     bs1 = bs4.BeautifulSoup(descriptionHTML.text,"html.parser")
@@ -248,6 +249,39 @@ for job in jobs:
 file.write("\n\n")
 file1.write("\n\n")
 
-print("interana jobs scraped successfully")
 file1.close()
+print("interana jobs scraped successfully")
+
+
+#scraping jobs at virtualpowersystems
+print('\nscraping jobs at virtualpowersystems')
+url  = 'http://www.virtualpowersystems.com/jobs//'
+html = requests.get(url)
+bs = bs4.BeautifulSoup(html.text,"html.parser")
+
+open("vps-jobs.txt",'w').close()
+file1 = open('vps-jobs.txt','a+')
+file1.write("\n\n\t\t\t\t\t VIRTUALPOERSYSTEMS JOBS\n\n")
+file.write("\n\n\t\t\t\t\t VIRTUALPOERSYSTEMS JOBS\n\n")
+
+jobs = bs.find_all('div',{'class':'job-info'})
+
+for job in jobs:
+    link = job.find('a')['href']
+    descriptionHTML = requests.get(link)
+    bs1 = bs4.BeautifulSoup(descriptionHTML.text,"html.parser")
+
+    title = bs1.find('span',{'class':'job-title'}).get_text()
+    type  = bs1.find('div',{'class':'job-type'}).get_text()
+    location = bs1.find('div',{'class':'job-location'}).get_text()
+    description = bs1.find('div',{'class':'et_pb_text_inner'}).get_text()
+    file.write("Title: "+title+"\n"+"Type: "+type+"\n"+"Location: "+location+"\n")
+    file1.write("Title: "+title+"\n"+"Type: "+type+"\n"+"Location: "+location+"\n")
+    file.write("Description: \n\t"+description+"\n\n---------------------\n")
+    file1.write("Description: \n\t"+description+"\n\n---------------------\n")
+file.write("\n\n")
+file1.write("\n\n")
+file1.close()
+print("virtualpowersystems jobs scraped successfully")
+
 file.close()
