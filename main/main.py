@@ -131,9 +131,7 @@ print("mesosphere jobs scraped succesfully")
 
 # scraping for rocketlabusa jobs
 print("\nscraping jobs at rocketlabusa")
-file1 = open('rocketlabusa-jobs.txt','w')
-file1.write('')
-file1.close()
+open('rocketlabusa-jobs.txt','w').close()
 file1=open('rocketlabusa-jobs.txt','a+')
 url  = 'https://www.rocketlabusa.com/careers/positions/'
 html = requests.get(url)
@@ -207,9 +205,7 @@ print("checkr jobs scraped succesfully")
 
 # scraping for interana jobs
 print("\nscraping jobs at interana")
-file1 = open('interana-jobs.txt','w')
-file1.write('')
-file1.close()
+open('interana-jobs.txt','w').close()
 file1=open('interana-jobs.txt','a+')
 
 url  = 'https://boards.greenhouse.io/interana'
@@ -309,6 +305,35 @@ for job in jobs:
 file1.close()
 print('pluribusnetworks jobs scraped succesfully')
 
+# scraping jobs at enlitic
+print("\nscraping jobs at enlitic")
+
+url  = 'https://jobs.lever.co/enlitic/'
+html = requests.get(url)
+bs = bs4.BeautifulSoup(html.text,"html.parser")
+
+jobs = bs.find_all('div',{'class':'posting'})
+open('enlitic-jobs.txt','w').close()
+file1 = open('enlitic-jobs.txt','a+')
+file.write("\n\n\t\t\t ENLITIC JOBS \n\n")
+file1.write("\n\n\t\t\t ENLITIC JOBS \n\n")
+for job in jobs:
+    # print(str(job)+"\n------------------\n")
+    try:
+        title = job.find('h5').get_text()
+        commitment = job.find('span',{'class':'sort-by-commitment posting-category small-category-label'}).get_text()
+        department = job.find('span',{'class':'sort-by-team posting-category small-category-label'}).get_text()
+        location = job.find('span',{'class':'sort-by-location posting-category small-category-label'}).get_text()
+    except:
+        pass
+    file.write("Title: "+title+"\nLocation: "+location+"\nDepartment: "+department+"\nCommitment: "+commitment+"\n\n")
+    file1.write("Title: "+title+"\nLocation: "+location+"\nDepartment: "+department+"\nCommitment: "+commitment+"\n\n")
+    title=location=commitment=department=''
+print('enlitic jobs scraped succesfully')
+file1.close()
+
+
+
 # scraping for sentinelone jobs
 print('\nscraping for sentinelone jobs')
 url  = 'https://jobs.jobvite.com/sentinelone/jobs'
@@ -319,6 +344,8 @@ jobs = bs.find_all('td',{'class':'jv-job-list-name'})
 
 open("sentinelone-jobs.txt",'w').close()
 file1 = open("sentinelone-jobs.txt",'a+')
+file.write("\n\n\t\t\t SENTINELONE JOBS \n\n")
+file1.write("\n\n\t\t\t SENTINELONE JOBS \n\n")
 for job in jobs:
     item = job.find('a')
     link = "https://jobs.jobvite.com"+item['href']
