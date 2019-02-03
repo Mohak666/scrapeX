@@ -1,14 +1,13 @@
 import requests
 import bs4
+from urllib.request import Request, urlopen
 
 open('all-jobs.txt','w').close()
 file = open('all-jobs.txt','a+')
 
 # scraping for Aporeto jobs
 print("scraping jobs at aporeto")
-file1 = open('aporeto-jobs.txt','w')
-file1.write('')
-file1.close()
+open('aporeto-jobs.txt','w').close()
 file1=open('aporeto-jobs.txt','a+')
 url  = 'https://www.aporeto.com/job-listings/'
 html = requests.get(url)
@@ -33,9 +32,7 @@ print("Aporeto jobs scraped successfully")
 
 # scraping for descartes jobs
 print('\nscraping jobs at descartes')
-file1 = open('descartes-jobs.txt','w')
-file1.write('')
-file1.close()
+open('descartes-jobs.txt','w').close()
 file1=open('descartes-jobs.txt','a+')
 file.write("\n\n\t\t\t\t\t DESCARTES JOBS\n\n")
 file1.write("\n\n\t\t\t\t\t DESCARTES JOBS\n\n")
@@ -92,9 +89,7 @@ print("Descartes jobs scraped successfully")
 
 # scraping for mesosphere jobs
 print("\nscraping jobs at mesosphere")
-file1 = open('mesosphere-jobs.txt','w')
-file1.write('')
-file1.close()
+open('mesosphere-jobs.txt','w').close()
 file1=open('mesosphere-jobs.txt','a+')
 file.write("\n\n\t\t\t\t\t MESOSPHERE JOBS\n\n")
 file1.write("\n\n\t\t\t\t\t MESOSPHERE JOBS\n\n")
@@ -283,5 +278,118 @@ file.write("\n\n")
 file1.write("\n\n")
 file1.close()
 print("virtualpowersystems jobs scraped successfully")
+
+
+#scraping jobs at pluribusnetworks
+print('\nscraping jobs at pluribusnetworks')
+
+url  = 'https://www.pluribusnetworks.com/company/careers/'
+html = requests.get(url)
+bs = bs4.BeautifulSoup(html.text,"html.parser")
+
+jobs = bs.find_all('div',{'class':'career'})
+file1 = open('pluribus-jobs.txt','a+')
+file.write("\n\n\t\t\t\t\t PLURIBUSNETWORKS JOBS\n\n")
+file1.write("\n\n\t\t\t\t\t PLURIBUSNETWORKS JOBS\n\n")
+for job in jobs:
+    item = job.find('a')
+    link = item['href']
+    title = item.get_text()
+    location = job.find('strong',{'class':'career-location'}).get_text()
+    descriptionHTML = requests.get(link)
+    bs1 = bs4.BeautifulSoup(descriptionHTML.text,"html.parser")
+    content = bs1.find('div',{'class':'career'}).get_text()
+    content = content.split('|')
+    content = content[1]
+
+    file.write("Title: "+title+"\n"+"Location: "+location+"\n Description: \n")
+    file1.write("Title: "+title+"\n"+"Location: "+location+"\n Description: \n")
+    file.write("\t"+content+"\n------------------\n")
+    file1.write("\t"+content+"\n------------------\n")
+file1.close()
+print('pluribusnetworks jobs scraped succesfully')
+
+# scraping for sentinelone jobs
+print('\nscraping for sentinelone jobs')
+url  = 'https://jobs.jobvite.com/sentinelone/jobs'
+html = requests.get(url)
+bs = bs4.BeautifulSoup(html.text,"html.parser")
+
+jobs = bs.find_all('td',{'class':'jv-job-list-name'})
+
+open("sentinelone-jobs.txt",'w').close()
+file1 = open("sentinelone-jobs.txt",'a+')
+for job in jobs:
+    item = job.find('a')
+    link = "https://jobs.jobvite.com"+item['href']
+    title = item.get_text()
+    # print(title,link)
+    descriptionHTML = requests.get(link)
+    bs1 = bs4.BeautifulSoup(descriptionHTML.text,"html.parser")
+    department = bs1.find('p',{'class':'jv-job-detail-meta'}).get_text().strip(' ')
+    location = bs1.find('span',{'class':'jv-inline-separator'}).get_text().strip('\n')
+    description = bs1.find('div',{'class':'jv-job-detail-description'}).get_text()
+
+    file.write("Title: +"+title+"\nDetails: "+department+"\n"+description)
+    file1.write("Title: +"+title+"\nDetails: "+department+"\n"+description)
+    file.write("\n----------------------\n")
+    file1.write("\n----------------------\n")
+file1.close()
+print('sentinelone jobs scraped succesfully')
+
+
+
+# scraping jobs at kurbo
+print('\nscraping jobs at kurbo')
+site= "https://kurbo.com/careers/"
+hdr = {'User-Agent': 'Mozilla/5.0'}
+req = Request(site,headers=hdr)
+page = urlopen(req)
+bs = bs4.BeautifulSoup(page,"html.parser")
+open('kurbo-jobs.txt','w').close()
+file1 = open('kurbo-jobs.txt','a+')
+file.write("\n\n\t\t\t KURBO JOBS\n\n")
+file1.write("\n\n\t\t\t KURBO JOBS\n\n")
+# print(bd)
+descriptions = bs.find_all('div',{'class':'career-content'})
+titles = bs.find_all('button',{'class','button-primary'})
+for i in range(len(titles)):
+    file.write("Title: "+titles[i].get_text()+"\nDescription: \t"+descriptions[i].get_text())
+    file1.write("Title: "+titles[i].get_text()+"\nDescription: \t"+descriptions[i].get_text())
+    file.write("\n----------------------------\n")
+    file1.write("\n----------------------------\n")
+file1.close()
+print('kurbo jobs scraped succesfully')
+
+# scraping jobs at haveninc
+print("\nscraping jobs at haven")
+
+site= "https://boards.greenhouse.io/haven"
+hdr = {'User-Agent': 'Mozilla/5.0'}
+req = Request(site,headers=hdr)
+page = urlopen(req)
+bs = bs4.BeautifulSoup(page,"html.parser")
+
+jobs = bs.find_all('div',{'class':'opening'})
+open('haven-jobs.txt','w').close()
+file1 = open('haven-jobs.txt','a+')
+file.write("\n\n\t\t\t HAVEN JOBS\n\n")
+file1.write("\n\n\t\t\t HAVEN JOBS\n\n")
+for job in jobs:
+    item = job.find('a')
+    link = "https://boards.greenhouse.io"+item['href']
+    title = item.get_text()
+    location = job.find('span').get_text()
+
+    req1 = Request(link,headers=hdr)
+    descriptionHTML = urlopen(req1)
+    bs1 = bs4.BeautifulSoup(descriptionHTML,"html.parser")
+    description = bs1.find('div',{'id':'content'}).get_text()
+    file.write('Title: '+title+"\nLocation: "+location+"\nDescription: \n\t"+description)
+    file1.write('Title: '+title+"\nLocation: "+location+"\nDescription: \n\t"+description)
+    file.write('\n-----------------------------\n')
+    file1.write('\n-----------------------------\n')
+file1.close()
+print('haven jobs scraped succesfully')
 
 file.close()

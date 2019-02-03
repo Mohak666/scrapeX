@@ -8,6 +8,7 @@ bs = bs4.BeautifulSoup(html.text,"html.parser")
 
 jobs = bs.find_all('div',{'class':'job-listing__text'})
 # print(jobs)
+open('aporeto-jobs.txt','w').close()
 file = open('aporeto-jobs.txt','a+')
 for job in jobs:
     title = job.find('h2').get_text()
