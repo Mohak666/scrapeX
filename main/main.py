@@ -388,6 +388,50 @@ for i in range(len(titles)):
 file1.close()
 print('kurbo jobs scraped succesfully')
 
+#scrapingjobs at embark
+print('scraping jobs at embark')
+
+url  = 'https://embarktrucks.com/jobs.html'
+html = requests.get(url)
+bs = bs4.BeautifulSoup(html.text,"html.parser")
+open('embark-jobs.txt','w').close()
+file1 =  open('embark-jobs.txt','a+')
+file.write("\n\n\t\t\t EMBARK JOBS\n\n")
+file1.write("\n\n\t\t\t EMBARK JOBS\n\n")
+jobs = bs.find_all('div',{'class':'posting'})
+
+for job in jobs:
+    item = job.find('a')
+    link = item['href']
+    title = job.find('h5').get_text()
+    commitment = job.find('span',{'class':'sort-by-commitment posting-category small-category-label'}).get_text()
+    department = job.find('span',{'class':'sort-by-team posting-category small-category-label'}).get_text()
+    location = job.find('span',{'class':'sort-by-location posting-category small-category-label'}).get_text()
+    descriptionHTML = requests.get(link)
+    bs1 = bs4.BeautifulSoup(descriptionHTML.text,"html.parser")
+    content = bs1.find('div',{'class':'section-wrapper page-full-width'})
+
+    file.write("Title: "+title+"\nLocation: "+location+"\nDepartment: "+department+"\nCommitment: "+commitment+"\nDescription: \n")
+    file1.write("Title: "+title+"\nLocation: "+location+"\nDepartment: "+department+"\nCommitment: "+commitment+"\nDescription: \n")
+    items = content.find_all('div',{'class':'section page-centered'})
+
+    for item in items:
+        try:
+            heading = item.find('h3').get_text()
+            text = item.find('ul').get_text()
+            file.write(heading+"\n"+text+"\n\n")
+            file1.write(heading+"\n"+text+"\n\n")
+        except:
+            file.write(item.get_text())
+            file1.write(item.get_text())
+
+    file1.write("\n-------------------\n")
+    file.write("\n-------------------\n")
+file1.close()
+
+print('embark jobs scraped succesfully')
+
+
 # scraping jobs at haveninc
 print("\nscraping jobs at haven")
 
