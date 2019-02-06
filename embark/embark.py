@@ -30,6 +30,5 @@ for job in jobs:
             file.write(heading+"\n"+text+"\n\n")
         except:
             file.write(item.get_text())
-
     file.write("\n-------------------\n")
 file.close()
